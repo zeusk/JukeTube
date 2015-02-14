@@ -49,16 +49,5 @@ template.onSigninSuccess = function(e, detail, sender) {
 
 template.isAuthenticated = true;
 
-if (!navigator.onLine) {
-	document.addEventListener('polymer-ready', function(e) {
-		var ajax = document.createElement('core-ajax');
-		ajax.auto = true;
-		ajax.url = '/data/users.json';
-		ajax.addEventListener('core-response', function(e) {
-			template.users = e.detail.response;
-		});
-	});
-}
-
 })();
 
