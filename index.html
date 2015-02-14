@@ -204,17 +204,17 @@ core-toolbar {
 }
 
 #drawer {
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		height: 100%;
-		box-sizing: border-box;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	box-sizing: border-box;
 }
 
 #drawerPanel core-header-panel {
-		background: none repeat scroll 0% 0% #FAFAFA;
-		box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
-		color: #757575;
+	background: none repeat scroll 0% 0% #FAFAFA;
+	box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
+	color: #757575;
 }
 
 p {
@@ -282,25 +282,25 @@ p {
 }
 
 #navheader .bottom :last-child {
-		font-size: small;
-		opacity: 0.8;
+	font-size: small;
+	opacity: 0.8;
 }
 
 #drawerPanel core-header-panel .separator {
-		padding: 16px;
-		font: bold 12px Arial, Tahoma, Helvetica, sans-serif;
-		border-top: 1px solid #E0E0E0;
+	padding: 16px;
+	font: bold 12px Arial, Tahoma, Helvetica, sans-serif;
+	border-top: 1px solid #E0E0E0;
 }
 
 #drawerPanel core-header-panel {
-		color: #757575;
+	color: #757575;
 }
 
 paper-item core-icon {
-		margin-right: 24px !important;
+	margin-right: 24px !important;
 }
 
-html core-icon {
+core-icon {
 	display: inline-block;
 	vertical-align: middle;
 	background-repeat: no-repeat;
@@ -322,11 +322,10 @@ html core-icon {
 	<core-drawer-panel id="drawerPanel" narrow="{{narrow}}">
 		<core-header-panel drawer>
 			<core-toolbar id="navheader" class="tall">
-				<!-- src={{user.profile}} -->
-				<img class="middle profile" src="img/duser.jpg" hidden?="{{!user.profile}}">
+				<img class="middle profile" src="{{user.profile}}" hidden?="{{!user.profile}}">
 				<div class="bottom" layout verticle>
-					<span>Shantanu Gupta</span>
-					<span>shans95g@gmail.com</span>
+					<span>{{user.name}}</span>
+					<span>{{user.email}}</span>
 				</div>
 			</core-toolbar>
 			<core-menu selected="0" excludedLocalNames="div" on-core-select="{{menuSelect}}">
@@ -398,7 +397,7 @@ html core-icon {
 					on-google-signin-success="{{onSigninSuccess}}"
 					on-google-signed-out="{{onSignedOut}}"
 					clientId="822065569202-utrmiir5h07hnu6t7596sicsnl16047q.apps.googleusercontent.com"
-					scopes="profile https://www.googleapis.com/auth/plus.login" >
+					scopes="profile https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/plus.login">
 				</google-signin>
 
 <!--
