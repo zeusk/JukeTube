@@ -33,6 +33,7 @@
 	<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
 	<link rel="import" href="./bower_components/paper-spinner/paper-spinner.html">
 	<link rel="import" href="./bower_components/paper-toast/paper-toast.html">
+	<link rel="import" href="./bower_components/paper-dialog/paper-dialog.html">
 	<link rel="import" href="./bower_components/google-signin/google-signin.html">
 	<link rel="import" href="./bower_components/core-style/core-style.html">
 	
@@ -329,7 +330,7 @@ core-icon {
 				</div>
 			</core-toolbar>
 			<core-menu selected="0" excludedLocalNames="div" on-core-select="{{menuSelect}}">
-				<paper-item label="Search">
+				<paper-item label="Home">
 					<core-icon icon="home"></core-icon>
 					Home
 				</paper-item>
@@ -340,7 +341,7 @@ core-icon {
 				<div class="separator">
 					PLAYLISTS
 				</div>
-				<paper-item label="My Subscriptions">
+				<paper-item label="Subscriptions">
 					<core-icon icon="bookmark-outline"></core-icon>
 					Subscriptions
 				</paper-item>
@@ -359,8 +360,7 @@ core-icon {
 					<core-icon icon="settings"></core-icon>
 					Settings
 				</paper-item>
-				info
-				<paper-item label="about">
+				<paper-item label="About">
 					<core-icon icon="info"></core-icon>
 					About
 				</paper-item>
@@ -371,7 +371,7 @@ core-icon {
 			id="scrollheader"
 			on-trackstart="{{onRefreshStart}}"
 			on-tracky="{{onMainAreaTrack}}"
-			on-trackend="{{onRefreshUp}}" >
+			on-trackend="{{onRefreshUp}}">
 
 			<core-toolbar id="mheader" class="tall">
 				<paper-icon-button core-drawer-toggle
@@ -388,7 +388,7 @@ core-icon {
 				<paper-icon-button
 					icon="search"
 					class="fade-on-drawer-open"
-					on-tap="{{toggleSearch}}" >
+					on-tap="{{toggleSearch}}">
 				</paper-icon-button>
 
 				<google-signin
@@ -397,7 +397,7 @@ core-icon {
 					on-google-signin-success="{{onSigninSuccess}}"
 					on-google-signed-out="{{onSignedOut}}"
 					clientId="822065569202-utrmiir5h07hnu6t7596sicsnl16047q.apps.googleusercontent.com"
-					scopes="profile https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/plus.login">
+					scopes="profile email https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/plus.login">
 				</google-signin>
 
 <!--
@@ -416,11 +416,15 @@ core-icon {
 						<paper-spinner id="refreshspinner"></paper-spinner>
 					</div>
 				</div>
-
 			</core-toolbar>
 		</core-scroll-header-panel>
 	</core-drawer-panel>
 </template>
+<paper-dialog id="loginpd" transition="core-transition-bottom">
+	<h1>Login</h1>
+	<p>This application needs a logged in google account to work as designed.</p>
+</paper-dialog>
+<script src="app.js"></script>
 </body>
 </html>
 
