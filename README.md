@@ -1,2 +1,4 @@
-Jukebox for Youtube, built using polymer during GDG Manipal's 
-polymer hackathon.
+# JukeTube
+
+A WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.
+
