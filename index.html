@@ -16,6 +16,7 @@
 	<link rel="import" href="./bower_components/core-ajax/core-ajax.html">
 	<link rel="import" href="./bower_components/core-toolbar/core-toolbar.html">
 	<link rel="import" href="./bower_components/core-icons/core-icons.html">
+	<link rel="import" href="./bower_components/core-icons/av-icons.html">
 	<link rel="import" href="./bower_components/core-image/core-image.html">
 	<link rel="import" href="./bower_components/core-menu/core-menu.html">
 	<link rel="import" href="./bower_components/core-localstorage/core-localstorage.html">
@@ -314,14 +315,8 @@ core-icon {
 	</style>
 </head>
 <body unresolved>
-
 <template id="t" is="auto-binding">
-
-<core-style ref="navheaderstyle"></core-style>
-<core-style ref="labelcolors"></core-style>
-
-
-	<core-drawer-panel id="drawerPanel" narrow="{{narrow}}">
+	<core-drawer-panel id="drawerPanel">
 		<core-header-panel drawer>
 			<core-toolbar id="navheader" class="tall">
 				<img class="middle profile" src="{{user.profile}}" hidden?="{{!user.profile}}">
@@ -330,7 +325,7 @@ core-icon {
 					<span>{{user.email}}</span>
 				</div>
 			</core-toolbar>
-			<core-menu selected="0" excludedLocalNames="div" on-core-select="{{menuSelect}}">
+			<core-menu id="navmenu" selected="0" excludedLocalNames="div" on-core-select="{{onMenuSelect}}">
 				<paper-item label="Home">
 					<core-icon icon="home"></core-icon>
 					Home
@@ -343,8 +338,8 @@ core-icon {
 					PLAYLISTS
 				</div>
 				<paper-item label="Subscriptions">
-					<core-icon icon="bookmark-outline"></core-icon>
-					Subscriptions
+					<core-icon icon="av:play-arrow"></core-icon>
+					Now Playing
 				</paper-item>
 				<paper-item label="History">
 					<core-icon icon="history"></core-icon>
@@ -367,31 +362,25 @@ core-icon {
 				</paper-item>
 			</core-menu>
 		</core-header-panel>
-
 		<core-scroll-header-panel main condenses keepCondensedHeader
 			id="scrollheader"
 			on-trackstart="{{onRefreshStart}}"
 			on-tracky="{{onMainAreaTrack}}"
 			on-trackend="{{onRefreshUp}}">
-
 			<core-toolbar id="mheader" class="tall">
 				<paper-icon-button core-drawer-toggle
 					id="navicon"
 					icon="menu" >
 				</paper-icon-button>
-
 				<div flex></div>
-
 				<div class="bottom indent title">
 					JukeTube
 				</div>
-
 				<paper-icon-button
 					icon="search"
 					class="fade-on-drawer-open"
 					on-tap="{{toggleSearch}}">
 				</paper-icon-button>
-
 				<google-signin
 					theme="light"
 					on-google-signin-failure="{{onSigninFailure}}"
@@ -400,7 +389,6 @@ core-icon {
 					clientId="822065569202-utrmiir5h07hnu6t7596sicsnl16047q.apps.googleusercontent.com"
 					scopes="profile email https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/plus.login">
 				</google-signin>
-
 <!--
 				<paper-menu-button layout horizontal
 					class="selected-item">
@@ -410,7 +398,6 @@ core-icon {
 					</paper-dropdown>
 				</paper-menu-button>
 -->
-
 				<div id="refresh" class="bottom fit"
 						 layout horizontal center-center on-transitionend="{{onRefreshTransitionEnd}}">
 					<div class="paper-shadow-bottom-z-1">
