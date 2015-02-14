@@ -1,0 +1,23 @@
+{
+  "name": "JukeTube",
+  "version": "0.0.0",
+  "homepage": "https://github.com/zeusk/JukeTube",
+  "authors": [
+    "Shantanu Gupta <shans95g@gmail.com>"
+  ],
+  "description": "A WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.",
+  "keywords": [
+    "youtube",
+    "jukebox",
+    "polymer"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
