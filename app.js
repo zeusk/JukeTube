@@ -18,9 +18,7 @@ template.onSignedOut = function(e, detail, sender) {
 template.onMenuSelect = function(e, detail, sender) {
 	var sel = parseInt(document.querySelector('#navmenu').selected);
 	
-	console.log("onMenuSelect: " + sel);
-
-	if (sel != 0 && !this.isAuthenticated) {
+	if (sel == 4 && !this.isAuthenticated) {
 		var prompt = document.querySelector('#loginpd');
 		if (prompt.opened != true) {
 			prompt.toggle();
