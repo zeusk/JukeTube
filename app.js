@@ -15,6 +15,19 @@ template.onSignedOut = function(e, detail, sender) {
 	};
 }
 
+template.onMenuSelect = function(e, detail, sender) {
+	var sel = parseInt(document.querySelector('#navmenu').selected);
+	
+	console.log("onMenuSelect: " + sel);
+
+	if (sel != 0 && !this.isAuthenticated) {
+		var prompt = document.querySelector('#loginpd');
+		if (prompt.opened != true) {
+			prompt.toggle();
+		}
+	}
+}
+
 template.onSigninSuccess = function(e, detail, sender) {
 	this.isAuthenticated = true;
 
@@ -36,18 +49,11 @@ template.onSigninSuccess = function(e, detail, sender) {
 				email: resp.result.emails[0].value,
 				profile: img || null
 			};
-
-			var users = {};
-
-			getAllUserProfileImages(users, null, function(users) {
-				template.users = users;
-				template.users[template.user.name] = template.user.profile; // signed in user.
-			});
 		});
 	});
 };
 
-template.isAuthenticated = true;
+template.isAuthenticated = false;
 
 })();
 
