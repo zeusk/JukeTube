@@ -88,7 +88,7 @@ body {
 	color: #757575;
 }
 
-#drawerPanel core-header-panel .separator {
+.separator {
 	padding: 16px;
 	font-size: 14px;
 	border-top: 1px solid #e0e0e0;
@@ -420,7 +420,10 @@ core-icon {
 </template>
 <paper-dialog id="loginpd" transition="core-transition-bottom">
 	<h1>Login</h1>
-	<p>This application needs a logged in google account to work as designed.</p>
+	<div class="separator"></div>
+	<div id="loginpdmsg">
+		Please login to use this feature.
+	</div>
 </paper-dialog>
 <script src="app.js"></script>
 </body>
