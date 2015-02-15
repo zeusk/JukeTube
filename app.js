@@ -78,7 +78,7 @@ function populateTabEx(tid, videoId) {
 			'"></img> ' +
 			resp.result.items[0].snippet.title +
 			' - ' +
-			videoId +
+//			videoId +
 			'</div><br />');
 	});
 }
