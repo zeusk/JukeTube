@@ -1,4 +1,5 @@
 (function() {
+
 var template = document.querySelector('#t');
 
 template.onSigninFailure = function(e, detail, sender) {
@@ -8,11 +9,17 @@ template.onSigninFailure = function(e, detail, sender) {
 template.onSignedOut = function(e, detail, sender) {
 	this.isAuthenticated = false;
 
+	// Clear user info
 	template.user = {
 		name: null,
 		email: null,
 		profile: null
 	};
+
+	// Clear user lists
+	$('#video-container2').html('');
+	$('#video-container4').html('');
+	$('#video-container5').html('');
 }
 
 template.onTubeReady = function(e, detail, sender) {
@@ -39,8 +46,8 @@ template.onMenuSelect = function(e, detail, sender) {
 
 	document.querySelector('#Tab' + sel).style.display = 'block';
 
-	// This needs logged in google account
 	if ((sel == 5 || sel == 4 || sel == 2) && !this.isAuthenticated) {
+		// These tabs require google account authentication
 		var prompt = document.querySelector('#loginpd');
 		if (prompt.opened != true) {
 			prompt.toggle();
@@ -59,30 +66,45 @@ template.onMenuSelect = function(e, detail, sender) {
 	}
 }
 
+function populateTabExAppend(tid, title, videoId) {
+	$('#video-container'+tid).append('<p>' + title + ' - ' + videoId + '</p>');
+}
+
+function populateTabEx(tid, videoId) {
+	var requestVideo = gapi.client.youtube.videos.list({
+		id: videoId,
+		part: 'snippet'
+	});
+	requestVideo.execute(function(resp) {
+		populateTabExAppend(tid, resp.result.items[0].snippet.title, videoId);
+	});
+}
+
 function populateTab(tid, playlistId, pageToken) {
+	$('#video-container'+tid).html('');
+
+	// Recommendation response contains array of videoIds instead of a playlistId
 	if (tid == 2) {
-		$.each(playlistId, function(index, item) {
-			var videoId;
-			if (item.contentDetails.upload)
-				videoId = item.contentDetails.upload.videoId;
-			if (item.contentDetails.like)
-				videoId = item.contentDetails.like.resourceId.videoId;
-			if (item.contentDetails.recommendation)
-				videoId = item.contentDetails.recommendation.resourceId.videoId;
-			if (videoId) {
-				var requestVideo = gapi.client.youtube.videos.list({
-					id: videoId,
-					part: 'snippet'
-				});
-				requestVideo.execute(function(resp) {
-					displayResult(2, resp.result.items[0].snippet.title, videoId);
-				});
-			}
-		});
+		if (playlistId) {
+			$.each(playlistId, function(index, item) {
+				var videoId;
+
+				if (item.contentDetails.upload) {
+					videoId = item.contentDetails.upload.videoId;
+				} else if (item.contentDetails.like) {
+					videoId = item.contentDetails.like.resourceId.videoId;
+				} else if (item.contentDetails.recommendation) {
+					videoId = item.contentDetails.recommendation.resourceId.videoId;
+				}
+
+				populateTabEx(2, videoId);
+			});
+		} else {
+			$('#video-container2').html('Youtube does not have any recommendations for you :(');
+		}
 		return;
 	}
 
-	$('#video-container'+tid).html('');
 	var requestOptions = {
 		playlistId: playlistId,
 		part: 'snippet',
@@ -96,18 +118,13 @@ function populateTab(tid, playlistId, pageToken) {
 		var playlistItems = response.result.items;
 		if (playlistItems) {
 			$.each(playlistItems, function(index, item) {
-				displayResult(tid, item.snippet.title, item.snippet.videoId);
+				populateTabEx(tid, item.snippet.resourceId.videoId);
 			});
 		} else {
 			$('#video-container'+tid).html('You do not have any videos in this list.');
 		}
 	});
 }
-
-function displayResult(tid, title, videoId) {
-	$('#video-container'+tid).append('<p>' + title + ' - ' + videoId + '</p>');
-}
-
 
 template.onSigninSuccess = function(e, detail, sender) {
 	this.gapi = e.detail.gapi;
