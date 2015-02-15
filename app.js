@@ -33,6 +33,21 @@ template.onTubeError = function(e, detail, sender) {
 	}
 }
 
+template.onMenuActivate = function(e, datail, sender) {
+	var sel = parseInt(document.querySelector('#navmenu').selected);
+
+	// Get new recommendations
+	if (sel == 2) {
+		var requestFeeds = gapi.client.youtube.activities.list({
+			home: true,
+			part: 'contentDetails'
+		});
+		requestFeeds.execute(function(resp) {
+			populateTab(2, resp.result.items);
+		});
+	}
+}
+
 template.onMenuSelect = function(e, detail, sender) {
 	var idx = 0;
 	var sel = parseInt(document.querySelector('#navmenu').selected);
@@ -71,70 +86,73 @@ function populateTabEx(tid, videoId) {
 		id: videoId,
 		part: 'snippet'
 	});
+
 	requestVideo.execute(function(resp) {
-		$('#video-container'+tid).append(
-			'<div class="video-list-item"><img class="video-list-item-thumb" src="' +
-			resp.result.items[0].snippet.thumbnails.default.url +
-			'"></img> ' +
-			resp.result.items[0].snippet.title +
-			' - ' +
-//			videoId +
-			'</div><br />');
+		if (!!!document.getElementById(videoId)) {
+			$('#video-list'+tid).append(
+				'<div id="' + videoId + '" onclick={{queueItem}} class="video" ' +
+					'title="' + resp.result.items[0].snippet.title + '">' +
+					'<img class="video-image" src="' +
+						resp.result.items[0].snippet.thumbnails.default.url +
+					'"></img> ' +
+					'<p class="video-title">' +
+						resp.result.items[0].snippet.title +
+					'</p>' +
+					'<p class="video-author">' +
+						resp.result.items[0].snippet.channelTitle +
+					'</p>' +
+					'<p class="video-description">' +
+						resp.result.items[0].snippet.description.trunc(512, true) +
+					'</p>' +
+				'</div>'
+			);
+		}
 	});
 }
 
 function populateTab(tid, playlistId, pageToken) {
-	$('#video-container'+tid).html('');
+	$('#video-container'+tid).html('<div id="video-list' + tid + '" class="video-list"></div>');
 
 	// Recommendation response contains array of videoIds instead of a playlistId
 	if (tid == 2) {
-		if (playlistId) {
-			$.each(playlistId, function(index, item) {
-				var videoId;
+		$.each(playlistId, function(index, item) {
+			var videoId;
 
-				if (item.contentDetails.upload) {
-					videoId = item.contentDetails.upload.videoId;
-				} else if (item.contentDetails.like) {
-					videoId = item.contentDetails.like.resourceId.videoId;
-				} else if (item.contentDetails.recommendation) {
-					videoId = item.contentDetails.recommendation.resourceId.videoId;
-				}
+			if (item.contentDetails.upload) {
+				videoId = item.contentDetails.upload.videoId;
+			} else if (item.contentDetails.like) {
+				videoId = item.contentDetails.like.resourceId.videoId;
+			} else if (item.contentDetails.recommendation) {
+				videoId = item.contentDetails.recommendation.resourceId.videoId;
+			}
 
-				populateTabEx(2, videoId);
-			});
-		} else {
-			$('#video-container2').html('Youtube does not have any recommendations for you :(');
+			populateTabEx(2, videoId);
+		});
+	} else {
+		var requestOptions = {
+			playlistId: playlistId,
+			part: 'snippet',
+			maxResults: 10
+		};
+
+		if (pageToken) {
+			requestOptions.pageToken = pageToken;
 		}
-		return;
-	}
 
-	var requestOptions = {
-		playlistId: playlistId,
-		part: 'snippet',
-		maxResults: 10
-	};
-	if (pageToken) {
-		requestOptions.pageToken = pageToken;
-	}
-	var request = gapi.client.youtube.playlistItems.list(requestOptions);
-	request.execute(function(response) {
-		var playlistItems = response.result.items;
-		if (playlistItems) {
+		var request = gapi.client.youtube.playlistItems.list(requestOptions);
+		request.execute(function(response) {
+			var playlistItems = response.result.items;
 			$.each(playlistItems, function(index, item) {
 				populateTabEx(tid, item.snippet.resourceId.videoId);
 			});
-		} else {
-			$('#video-container'+tid).html('You do not have any videos in this list.');
-		}
-	});
+		});
+	}
 }
 
 template.onSigninSuccess = function(e, detail, sender) {
 	this.gapi = e.detail.gapi;
 
 	gapi.client.load('plus', 'v1').then(function() {
-
-		// Get user's profile pic, cover image, email, and name.
 		gapi.client.plus.people.get({userId: 'me'}).then(function(resp) {
 			var PROFILE_IMAGE_SIZE = 75;
 			var img = resp.result.image && resp.result.image.url.replace(/(.+)\?sz=\d\d/, "$1?sz=" + PROFILE_IMAGE_SIZE);
@@ -145,31 +163,31 @@ template.onSigninSuccess = function(e, detail, sender) {
 				profile: img || null
 			};
 		});
+	});
 
-		/*
-		 * My first google-API based app, got struck by a known bug already!
-		 *
-		 * API v3 Watch History returns empty erratically
-		 * https://code.google.com/p/gdata-issues/issues/detail?id=4642
-		 */
-		gapi.client.load('youtube', 'v3', function() {
-				var requestLists = gapi.client.youtube.channels.list({
-					mine: true,
-					part: 'contentDetails'
-				});
-				requestLists.execute(function(resp) {
-					populateTab(5, resp.result.items[0].contentDetails.relatedPlaylists.watchLater);
-					populateTab(4, resp.result.items[0].contentDetails.relatedPlaylists.watchHistory);
-				});
+	/*
+	 * My first google-API based app, got struck by a known bug already!
+	 *
+	 * API v3 Watch History returns empty erratically
+	 * https://code.google.com/p/gdata-issues/issues/detail?id=4642
+	 */
+	gapi.client.load('youtube', 'v3', function() {
+		var requestLists = gapi.client.youtube.channels.list({
+			mine: true,
+			part: 'contentDetails'
+		});
+		requestLists.execute(function(resp) {
+			populateTab(5, resp.result.items[0].contentDetails.relatedPlaylists.watchLater);
+			populateTab(4, resp.result.items[0].contentDetails.relatedPlaylists.watchHistory);
+		});
 
-				var requestFeeds = gapi.client.youtube.activities.list({
-					home: true,
-					part: 'contentDetails'
-				});
-				requestFeeds.execute(function(resp) {
-					populateTab(2, resp.result.items);
-				});
-			});
+		var requestFeeds = gapi.client.youtube.activities.list({
+			home: true,
+			part: 'contentDetails'
+		});
+		requestFeeds.execute(function(resp) {
+			populateTab(2, resp.result.items);
+		});
 	});
 
 	this.isAuthenticated = true;

@@ -40,6 +40,13 @@
 	<link rel="import" href="./bower_components/core-style/core-style.html">
 
 	<link rel="stylesheet" type="text/css" href="./app.css">
+<script>
+String.prototype.trunc = function(n,useWordBoundary) {
+	var toLong = this.length>n, s_ = toLong ? this.substr(0,n-1) : this;
+	s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+	return  toLong ? s_ + '&hellip;' : s_;
+};
+</script>
 </head>
 <body unresolved>
 <template id="t" is="auto-binding">
@@ -56,6 +63,7 @@
 				id="navmenu"
 				selected="0"
 				excludedLocalNames="div"
+				on-core-activate="{{onMenuActivate}}"
 				on-core-select="{{onMenuSelect}}">
 				<paper-item label="Home">
 					<core-icon icon="home"></core-icon>
@@ -121,12 +129,6 @@
 					clientId="822065569202-utrmiir5h07hnu6t7596sicsnl16047q.apps.googleusercontent.com"
 					scopes="profile email https://www.googleapis.com/auth/youtube.readonly">
 				</google-signin>
-				<div id="refresh" class="bottom fit"
-						 layout horizontal center-center on-transitionend="{{onRefreshTransitionEnd}}">
-					<div class="paper-shadow-bottom-z-1">
-						<paper-spinner id="refreshspinner"></paper-spinner>
-					</div>
-				</div>
 			</core-toolbar>
 			<div id = "Tab0">
 				<google-youtube
@@ -142,26 +144,30 @@
 					on-google-youtube-ready="{{onTubeReady}}">
 				</google-youtube>
 			</div>
-			<div id = "Tab1" style="display:none;">
+			<div id = "Tab1" style="display:none;" class="TabGeneric">
 			</div>
-			<div id = "Tab2" style="display:none;">
+			<div id = "Tab2" style="display:none;" class="TabGeneric">
 				<div id="video-container2"></div>
 			</div>
-			<div id = "Tab3" style="display:none;">
+			<div id = "Tab3" style="display:none;" class="TabGeneric">
 				<div id="video-container3"></div>
 			</div>
-			<div id = "Tab4" style="display:none;">
+			<div id = "Tab4" style="display:none;" class="TabGeneric">
 				<div id="video-container4"></div>
 			</div>
-			<div id = "Tab5" style="display:none;">
+			<div id = "Tab5" style="display:none;" class="TabGeneric">
 				<div id="video-container5"></div>
 			</div>
-			<div id = "Tab6" style="display:none;">
+			<div id = "Tab6" style="display:none;" class="TabGeneric">
+				<br />
+				<div>
+					<p>This area is left blank intentionally at the moment.</p>
+				</div>
 			</div>
-			<div id = "Tab7" style="display:none; padding: 10px;">
-				<h2>About</h2>
-				<div class="seperator">
-					JukeTube is a WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.
+			<div id = "Tab7" style="display:none;" class="TabGeneric">
+				<br />
+				<div>
+					<p>JukeTube is a WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.</p>
 				</div>
 			</div>
 		</core-scroll-header-panel>
