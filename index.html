@@ -127,12 +127,14 @@ String.prototype.trunc = function(n, useWordBoundary) {
 					videoid="dQw4w9WgXcQ"
 					rel="0"
 					start="5"
-					autoplay="0"
+					autoplay="1"
 					modestbranding="1"
 					showinfo="0"
 					iv_load_policy="3"
 					fluid="true"
-					on-google-youtube-ready="{{onTubeReady}}">
+					on-google-youtube-ready="{{onTubeReady}}"
+					on-google-youtube-error="{{onTubeError}}"
+					on-google-youtube-state-change="{{onTubeState}}">
 				</google-youtube>
 			</div>
 			<div id = "Tab1" style="display:none;">

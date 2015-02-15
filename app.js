@@ -33,6 +33,10 @@ template.onTubeError = function(e, detail, sender) {
 	}
 }
 
+template.onTubeState = function(e, detail, sender) {
+
+}
+
 template.onMenuActivate = function(e, datail, sender) {
 	var sel = parseInt(document.querySelector('#navmenu').selected);
 
@@ -80,7 +84,12 @@ template.onMenuSelect = function(e, detail, sender) {
 
 		// If on home, make sure video has prime estate on screen
 		if (sel == 0) {
-			document.querySelector('#gytube').scrollIntoView(false);
+			var yutube = document.querySelector('#gytube');
+
+			yutube.scrollIntoView(false);
+			if (yutube.videoid != videoPlayList[0]) {
+				yutube.videoid  = videoPlayList[0];
+			}
 		} else if (sel == 3) {
 			populateTab(3);
 		}
