@@ -15,13 +15,46 @@ template.onSignedOut = function(e, detail, sender) {
 	};
 }
 
+template.onTubeReady = function(e, detail, sender) {
+	document.querySelector('#gytube').scrollIntoView(false);
+}
+
+template.onTubeError = function(e, detail, sender) {
+	var prompt = document.querySelector('#errorpd');
+	if (prompt.opened != true) {
+		prompt.toggle();
+	}
+}
+
 template.onMenuSelect = function(e, detail, sender) {
+	var idx = 0;
 	var sel = parseInt(document.querySelector('#navmenu').selected);
-	
+
+	// Hide all but current tabs
+	do {
+		if (idx != sel) {
+			document.querySelector('#Tab' + idx).style.display = 'none';
+		}
+	} while(++idx < 7);
+
+	document.querySelector('#Tab' + sel).style.display = 'block';
+
+	// This needs logged in google account
 	if (sel == 4 && !this.isAuthenticated) {
 		var prompt = document.querySelector('#loginpd');
 		if (prompt.opened != true) {
 			prompt.toggle();
+		}
+	} else {
+		// Close drawer if in narrow mode
+		var drw = document.querySelector('#drawerPanel');
+		if (drw.narrow) {
+			drw.closeDrawer();
+		}
+
+		// If on home, make sure video has prime estate on screen
+		if (sel == 0) {
+			document.querySelector('#gytube').scrollIntoView(false);
 		}
 	}
 }

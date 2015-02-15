@@ -43,7 +43,7 @@
 </head>
 <body unresolved>
 <template id="t" is="auto-binding">
-	<core-drawer-panel id="drawerPanel">
+	<core-drawer-panel id="drawerPanel"> <!-- TODO: forceNarrow="true" when fullscreen -->
 		<core-header-panel drawer>
 			<core-toolbar id="navheader" class="tall">
 				<img class="middle profile" src="{{user.profile}}" hidden?="{{!user.profile}}">
@@ -52,7 +52,11 @@
 					<span>{{user.email}}</span>
 				</div>
 			</core-toolbar>
-			<core-menu id="navmenu" selected="0" excludedLocalNames="div" on-core-select="{{onMenuSelect}}">
+			<core-menu
+				id="navmenu"
+				selected="0"
+				excludedLocalNames="div"
+				on-core-select="{{onMenuSelect}}">
 				<paper-item label="Home">
 					<core-icon icon="home"></core-icon>
 					Home
@@ -123,16 +127,32 @@
 					</div>
 				</div>
 			</core-toolbar>
-			<google-youtube
-				videoid="dQw4w9WgXcQ"
-				rel="0"
-				start="5"
-				autoplay="0"
-				modestbranding="1"
-				showinfo="0"
-				iv_load_policy="3"
-				fluid="true">
-			</google-youtube>
+			<div id = "Tab0">
+				<google-youtube
+					id="gytube"
+					videoid="dQw4w9WgXcQ"
+					rel="0"
+					start="5"
+					autoplay="0"
+					modestbranding="1"
+					showinfo="0"
+					iv_load_policy="3"
+					fluid="true"
+					on-google-youtube-ready="{{onTubeReady}}">
+				</google-youtube>
+			</div>
+			<div id = "Tab1" style="display:none;">
+			</div>
+			<div id = "Tab2" style="display:none;">
+			</div>
+			<div id = "Tab3" style="display:none;">
+			</div>
+			<div id = "Tab4" style="display:none;">
+			</div>
+			<div id = "Tab5" style="display:none;">
+			</div>
+			<div id = "Tab6" style="display:none;">
+			</div>
 		</core-scroll-header-panel>
 	</core-drawer-panel>
 </template>
@@ -141,6 +161,13 @@
 	<div class="separator"></div>
 	<div id="loginpdmsg">
 		Please login to use this feature.
+	</div>
+</paper-dialog>
+<paper-dialog id="errorpd" transition="core-transition-bottom">
+	<h1>Error</h1>
+	<div class="separator"></div>
+	<div id="errorpdmsg">
+		An unexpected error has occured, Please refresh the page to continue.
 	</div>
 </paper-dialog>
 <script src="app.js"></script>
