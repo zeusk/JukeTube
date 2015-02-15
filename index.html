@@ -151,13 +151,17 @@
 			</div>
 			<div id = "Tab5" style="display:none;">
 			</div>
-			<div id = "Tab6" style="display:none;">
+			<div id = "Tab6" style="display:none; padding: 10px;">
+				<h2>About</h2>
+				<div class="seperator">
+					JukeTube is a WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.
+				</div>
 			</div>
 		</core-scroll-header-panel>
 	</core-drawer-panel>
 </template>
 <paper-dialog id="loginpd" transition="core-transition-bottom">
-	<h1>Login</h1>
+	<h1>Got Google?</h1>
 	<div class="separator"></div>
 	<div id="loginpdmsg">
 		Please login to use this feature.
@@ -177,7 +181,7 @@ window.onresize = function(event) {
 
 	if (hidebarinF == true) {
 		document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
-			((screen.availHeight || screen.height-30) <= window.innerHeight);
+			((screen.availHeight || screen.height-32) <= window.innerHeight);
 	}
 
 	if (parseInt(document.getElementById('navmenu').selected) == 0) {
