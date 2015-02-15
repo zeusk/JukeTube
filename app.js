@@ -33,8 +33,18 @@ template.onTubeError = function(e, detail, sender) {
 	}
 }
 
-template.onTubeState = function(e, detail, sender) {
+function handleTubeState() {
+	var yutube = document.getElementById('gytube');
 
+	if (yutube.state == 0) {
+		videoPlayList.shift();
+		if (videoPlayList[0])
+			yutube.videoid  = videoPlayList[0];
+	}
+}
+
+template.onTubeState = function(e, detail, sender) {
+	handleTubeState();
 }
 
 template.onMenuActivate = function(e, datail, sender) {
@@ -153,7 +163,7 @@ function populateTab(tid, playlistId, pageToken) {
 			obj = videoSnippets[item];
 
 			$('#video-list3').append(
-				'<div id="' + item + '" onclick={{queueItem}} class="video" ' +
+				'<div id="' + item + '" onclick="queueItem(this)" class="video" ' +
 					'title="' + obj.snippet.title + '">' +
 					'<img class="video-image" src="' +
 						obj.snippet.thumbnails.medium.url +
