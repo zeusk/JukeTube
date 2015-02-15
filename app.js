@@ -97,8 +97,10 @@ template.onMenuSelect = function(e, detail, sender) {
 			var yutube = document.querySelector('#gytube');
 
 			yutube.scrollIntoView(false);
-			if (yutube.videoid != videoPlayList[0]) {
-				yutube.videoid  = videoPlayList[0];
+			if (videoPlayList[0]) {
+				if (yutube.videoid != videoPlayList[0]) {
+					yutube.videoid  = videoPlayList[0];
+				}
 			}
 		} else if (sel == 3) {
 			populateTab(3);
