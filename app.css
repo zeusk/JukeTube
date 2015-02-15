@@ -12,22 +12,6 @@ body {
 	font-weight: 300;
 }
 
-#loginscreen {
-	background: rgba(255, 255, 255, 0.9);
-	z-index: 1;
-	visibility: hidden;
-	transition: all 300ms ease-in-out;
-	opacity: 0;
-	will-change: transform;
-	transform: scale(0);
-}
-
-#loginscreen.show {
-	visibility: visible;
-	opacity: 1;
-	transform: scale(1);
-}
-
 #drawerPanel:not([narrow]) core-scroll-header-panel [content] {
 	padding: 30px 0;
 }
@@ -87,61 +71,8 @@ core-scroll-header-panel > [content] {
 	height: 100%;
 }
 
-#fab {
-	position: fixed;
-	bottom: 16px;
-	right: 16px;
-	color: white;
-	will-change: transform;
-	-webkit-transition: -webkit-transform 0.2s ease-in-out;
-	transition: transform 0.2s ease-in-out;
-}
-
-#fab.moveup {
-	transform: translate3d(0, -48px, 0);
-}
-
 #toast > * {
 	color: #ffa726;
-}
-
-#refresh {
-	position: absolute;
-	z-index: -1;
-	bottom: 10px;
-	pointer-events: none;
-	will-change: transform;
-}
-
-#refresh.snapback {
-	transition: all 100ms ease-out;
-	-webkit-transform: translate3d(0, 81px, 0);
-	transform: translate3d(0, 81px, 0);
-}
-
-#refresh.snapback.tostart {
-	-webkit-transform: translate3d(0, 0, 0) !important;
-	transform: translate3d(0, 0, 0) !important;
-}
-
-#refresh.shrink {
-	-webkit-transform: translate3d(0, 81px, 0) scale(0.001); /* Note: scale(0) doesn't work */
-	transform: translate3d(0, 81px, 0) scale(0.001); /* Note: scale(0) doesn't work */
-}
-
-#refresh > div {
-	width: 22px;
-	height: 22px;
-	background: #fff;
-	border-radius: 50%;
-	padding: 8px;
-}
-
-#refresh paper-spinner {
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	will-change: opacity;
 }
 
 core-drawer-panel {
@@ -176,13 +107,6 @@ core-toolbar {
 	background: none repeat scroll 0% 0% #FAFAFA;
 	box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
 	color: #757575;
-}
-
-p {
-	margin: 20px;
-	padding: 80px 20px;
-	border-radius: 20px;
-	background-color: #eee;
 }
 
 #navheader {
