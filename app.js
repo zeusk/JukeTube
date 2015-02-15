@@ -66,17 +66,20 @@ template.onMenuSelect = function(e, detail, sender) {
 	}
 }
 
-function populateTabExAppend(tid, title, videoId) {
-	$('#video-container'+tid).append('<p>' + title + ' - ' + videoId + '</p>');
-}
-
 function populateTabEx(tid, videoId) {
 	var requestVideo = gapi.client.youtube.videos.list({
 		id: videoId,
 		part: 'snippet'
 	});
 	requestVideo.execute(function(resp) {
-		populateTabExAppend(tid, resp.result.items[0].snippet.title, videoId);
+		$('#video-container'+tid).append(
+			'<div class="video-list-item"><img class="video-list-item-thumb" src="' +
+			resp.result.items[0].snippet.thumbnails.default.url +
+			'"></img> ' +
+			resp.result.items[0].snippet.title +
+			' - ' +
+			videoId +
+			'</div><br />');
 	});
 }
 
