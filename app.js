@@ -93,8 +93,8 @@ function populateTabEx(tid, videoId) {
 				'<div id="' + videoId + '" onclick={{queueItem}} class="video" ' +
 					'title="' + resp.result.items[0].snippet.title + '">' +
 					'<img class="video-image" src="' +
-						resp.result.items[0].snippet.thumbnails.default.url +
-					'"></img> ' +
+						resp.result.items[0].snippet.thumbnails.medium.url +
+					'" height=156px width=auto></img>' +
 					'<p class="video-title">' +
 						resp.result.items[0].snippet.title +
 					'</p>' +
@@ -102,9 +102,9 @@ function populateTabEx(tid, videoId) {
 						resp.result.items[0].snippet.channelTitle +
 					'</p>' +
 					'<p class="video-description">' +
-						resp.result.items[0].snippet.description.trunc(512, true) +
+						resp.result.items[0].snippet.description.trunc(448, true) +
 					'</p>' +
-				'</div>'
+				'</div><p class="video-list-spacer">&nbsp;</p>'
 			);
 		}
 	});

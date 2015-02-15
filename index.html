@@ -190,20 +190,18 @@ String.prototype.trunc = function(n,useWordBoundary) {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="app.js"></script>
 <script>
-$(function() {
-	window.onresize = function(event) {
-		var hidebarinF = true;
+var hidebarinF = true;
 
-		if (hidebarinF == true) {
-			document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
-				((screen.availHeight || screen.height-30) <= window.innerHeight);
-		}
-
-		if (parseInt(document.getElementById('navmenu').selected) == 0) {
-			document.getElementById('gytube').scrollIntoView(false);
-		}
+window.onresize = function (event) {
+	if (hidebarinF == true) {
+		document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
+			((screen.availHeight || screen.height-30) <= window.innerHeight);
 	}
-});
+
+	if (parseInt(document.getElementById('navmenu').selected) == 0) {
+		document.getElementById('gytube').scrollIntoView(false);
+	}
+}
 </script>
 </body>
 </html>
