@@ -4,10 +4,10 @@ A WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hack
 
 ## How-To
 
-1) git clone https://github.com/zeusk/JukeTube.git
-2) cd JukeTube
-3) bower install
-4) <launch your favourite http server in cwd>
+1. git clone https://github.com/zeusk/JukeTube.git
+2. cd JukeTube
+3. bower install
+4. <launch your favourite http server in cwd>
 
 ## What works
 
