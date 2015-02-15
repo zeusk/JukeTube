@@ -40,7 +40,7 @@ template.onMenuSelect = function(e, detail, sender) {
 	document.querySelector('#Tab' + sel).style.display = 'block';
 
 	// This needs logged in google account
-	if (sel == 4 && !this.isAuthenticated) {
+	if ((sel == 4 || sel == 3) && !this.isAuthenticated) {
 		var prompt = document.querySelector('#loginpd');
 		if (prompt.opened != true) {
 			prompt.toggle();
