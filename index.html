@@ -61,6 +61,10 @@
 					<core-icon icon="home"></core-icon>
 					Home
 				</paper-item>
+				<paper-item label="Search">
+					<core-icon icon="search"></core-icon>
+					Search
+				</paper-item>
 				<paper-item label="What to Watch">
 					<core-icon icon="menu"></core-icon>
 					What to Watch
@@ -107,18 +111,15 @@
 				<div class="bottom indent title">
 					JukeTube
 				</div>
-				<paper-icon-button
-					icon="search"
-					class="fade-on-drawer-open"
-					on-tap="{{toggleSearch}}">
-				</paper-icon-button>
 				<google-signin
 					theme="light"
+					labelSignin="Login"
+					labelSignout="Logout"
 					on-google-signin-failure="{{onSigninFailure}}"
 					on-google-signin-success="{{onSigninSuccess}}"
 					on-google-signed-out="{{onSignedOut}}"
 					clientId="822065569202-utrmiir5h07hnu6t7596sicsnl16047q.apps.googleusercontent.com"
-					scopes="profile email https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/plus.login">
+					scopes="profile email https://www.googleapis.com/auth/youtube.readonly">
 				</google-signin>
 				<div id="refresh" class="bottom fit"
 						 layout horizontal center-center on-transitionend="{{onRefreshTransitionEnd}}">
@@ -144,14 +145,20 @@
 			<div id = "Tab1" style="display:none;">
 			</div>
 			<div id = "Tab2" style="display:none;">
+				<div id="video-container2"></div>
 			</div>
 			<div id = "Tab3" style="display:none;">
+				<div id="video-container3"></div>
 			</div>
 			<div id = "Tab4" style="display:none;">
+				<div id="video-container4"></div>
 			</div>
 			<div id = "Tab5" style="display:none;">
+				<div id="video-container5"></div>
 			</div>
-			<div id = "Tab6" style="display:none; padding: 10px;">
+			<div id = "Tab6" style="display:none;">
+			</div>
+			<div id = "Tab7" style="display:none; padding: 10px;">
 				<h2>About</h2>
 				<div class="seperator">
 					JukeTube is a WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.
@@ -174,20 +181,23 @@
 		An unexpected error has occured, Please refresh the page to continue.
 	</div>
 </paper-dialog>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="app.js"></script>
 <script>
-window.onresize = function(event) {
-	var hidebarinF = true;
+$(function() {
+	window.onresize = function(event) {
+		var hidebarinF = true;
 
-	if (hidebarinF == true) {
-		document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
-			((screen.availHeight || screen.height-32) <= window.innerHeight);
-	}
+		if (hidebarinF == true) {
+			document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
+				((screen.availHeight || screen.height-30) <= window.innerHeight);
+		}
 
-	if (parseInt(document.getElementById('navmenu').selected) == 0) {
-		document.getElementById('gytube').scrollIntoView(false);
+		if (parseInt(document.getElementById('navmenu').selected) == 0) {
+			document.getElementById('gytube').scrollIntoView(false);
+		}
 	}
-}
+});
 </script>
 </body>
 </html>
