@@ -2,16 +2,11 @@
 <html>
 <head>
 	<title>JukeTube</title>
-
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-
 	<link rel="icon" href="./img/favicon.png" type="image/png">
 	<link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
-
 	<link rel="import" href="./bower_components/polymer/polymer.html" />
-
 	<script src="./bower_components/webcomponentsjs/webcomponents.js"></script>
-
 	<link rel="import" href="./bower_components/core-drawer-panel/core-drawer-panel.html">
 	<link rel="import" href="./bower_components/core-ajax/core-ajax.html">
 	<link rel="import" href="./bower_components/core-toolbar/core-toolbar.html">
@@ -38,10 +33,10 @@
 	<link rel="import" href="./bower_components/google-signin/google-signin.html">
 	<link rel="import" href="./bower_components/google-youtube/google-youtube.html">
 	<link rel="import" href="./bower_components/core-style/core-style.html">
-
 	<link rel="stylesheet" type="text/css" href="./app.css">
 <script>
-String.prototype.trunc = function(n,useWordBoundary) {
+// Modify javascript's trunc function to truncate only at word boundary
+String.prototype.trunc = function(n, useWordBoundary) {
 	var toLong = this.length>n, s_ = toLong ? this.substr(0,n-1) : this;
 	s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 	return  toLong ? s_ + '&hellip;' : s_;
@@ -105,11 +100,7 @@ String.prototype.trunc = function(n,useWordBoundary) {
 				</paper-item>
 			</core-menu>
 		</core-header-panel>
-		<core-scroll-header-panel main condenses keepCondensedHeader
-			id="scrollheader"
-			on-trackstart="{{onRefreshStart}}"
-			on-tracky="{{onMainAreaTrack}}"
-			on-trackend="{{onRefreshUp}}">
+		<core-scroll-header-panel main condenses keepCondensedHeader id="scrollheader">
 			<core-toolbar id="mheader" class="tall">
 				<paper-icon-button core-drawer-toggle
 					id="navicon"
@@ -144,27 +135,27 @@ String.prototype.trunc = function(n,useWordBoundary) {
 					on-google-youtube-ready="{{onTubeReady}}">
 				</google-youtube>
 			</div>
-			<div id = "Tab1" style="display:none;" class="TabGeneric">
+			<div id = "Tab1" style="display:none;">
 			</div>
-			<div id = "Tab2" style="display:none;" class="TabGeneric">
+			<div id = "Tab2" style="display:none;">
 				<div id="video-container2"></div>
 			</div>
-			<div id = "Tab3" style="display:none;" class="TabGeneric">
+			<div id = "Tab3" style="display:none;">
 				<div id="video-container3"></div>
 			</div>
-			<div id = "Tab4" style="display:none;" class="TabGeneric">
+			<div id = "Tab4" style="display:none;">
 				<div id="video-container4"></div>
 			</div>
-			<div id = "Tab5" style="display:none;" class="TabGeneric">
+			<div id = "Tab5" style="display:none;">
 				<div id="video-container5"></div>
 			</div>
-			<div id = "Tab6" style="display:none;" class="TabGeneric">
+			<div id = "Tab6" style="display:none;">
 				<br />
 				<div>
 					<p>This area is left blank intentionally at the moment.</p>
 				</div>
 			</div>
-			<div id = "Tab7" style="display:none;" class="TabGeneric">
+			<div id = "Tab7" style="display:none;">
 				<br />
 				<div>
 					<p>JukeTube is a WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.</p>
@@ -172,7 +163,6 @@ String.prototype.trunc = function(n,useWordBoundary) {
 			</div>
 		</core-scroll-header-panel>
 	</core-drawer-panel>
-</template>
 <paper-dialog id="loginpd" transition="core-transition-bottom">
 	<h1>Got Google?</h1>
 	<div class="separator"></div>
@@ -203,6 +193,7 @@ window.onresize = function (event) {
 	}
 }
 </script>
+</template>
 </body>
 </html>
 

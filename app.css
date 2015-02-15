@@ -206,3 +206,7 @@ core-icon {
 .video-description{ color: #727785; font-size: 12px; line-height: 1.5;}
 .video:hover{ background: #22242a; color: white;}
 
+#Tab6, #Tab7 {
+	margin: 0px 0px 0px 24px;
+}
+

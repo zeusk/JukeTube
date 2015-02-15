@@ -1,6 +1,6 @@
-(function() {
-
 var template = document.querySelector('#t');
+var videoSnippets = [];
+var videoPlayList = [];
 
 template.onSigninFailure = function(e, detail, sender) {
 	this.isAuthenticated = false;
@@ -48,6 +48,10 @@ template.onMenuActivate = function(e, datail, sender) {
 	}
 }
 
+function queueItem(e) {
+	videoPlayList.push(e.id);
+}
+
 template.onMenuSelect = function(e, detail, sender) {
 	var idx = 0;
 	var sel = parseInt(document.querySelector('#navmenu').selected);
@@ -77,6 +81,8 @@ template.onMenuSelect = function(e, detail, sender) {
 		// If on home, make sure video has prime estate on screen
 		if (sel == 0) {
 			document.querySelector('#gytube').scrollIntoView(false);
+		} else if (sel == 3) {
+			populateTab(3);
 		}
 	}
 }
@@ -88,9 +94,12 @@ function populateTabEx(tid, videoId) {
 	});
 
 	requestVideo.execute(function(resp) {
+		if (!resp.result.items[0]) {
+			return;
+		}
 		if (!!!document.getElementById(videoId)) {
 			$('#video-list'+tid).append(
-				'<div id="' + videoId + '" onclick={{queueItem}} class="video" ' +
+				'<div id="' + videoId + '" onclick="queueItem(this)" class="video" ' +
 					'title="' + resp.result.items[0].snippet.title + '">' +
 					'<img class="video-image" src="' +
 						resp.result.items[0].snippet.thumbnails.medium.url +
@@ -106,6 +115,8 @@ function populateTabEx(tid, videoId) {
 					'</p>' +
 				'</div><p class="video-list-spacer">&nbsp;</p>'
 			);
+
+			videoSnippets[videoId] = resp.result.items[0];
 		}
 	});
 }
@@ -127,6 +138,28 @@ function populateTab(tid, playlistId, pageToken) {
 			}
 
 			populateTabEx(2, videoId);
+		});
+	} else if (tid == 3) {
+		$.each(videoPlayList, function(index, item) {
+			obj = videoSnippets[item];
+
+			$('#video-list3').append(
+				'<div id="' + item + '" onclick={{queueItem}} class="video" ' +
+					'title="' + obj.snippet.title + '">' +
+					'<img class="video-image" src="' +
+						obj.snippet.thumbnails.medium.url +
+					'" height=156px width=auto></img>' +
+					'<p class="video-title">' +
+						obj.snippet.title +
+					'</p>' +
+					'<p class="video-author">' +
+						obj.snippet.channelTitle +
+					'</p>' +
+					'<p class="video-description">' +
+						obj.snippet.description.trunc(448, true) +
+					'</p>' +
+				'</div><p class="video-list-spacer">&nbsp;</p>'
+			);
 		});
 	} else {
 		var requestOptions = {
@@ -192,8 +225,5 @@ template.onSigninSuccess = function(e, detail, sender) {
 
 	this.isAuthenticated = true;
 };
-
 template.isAuthenticated = false;
-
-})();
 
