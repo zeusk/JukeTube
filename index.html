@@ -43,7 +43,7 @@
 </head>
 <body unresolved>
 <template id="t" is="auto-binding">
-	<core-drawer-panel id="drawerPanel"> <!-- TODO: forceNarrow="true" when fullscreen -->
+	<core-drawer-panel id="drawerPanel">
 		<core-header-panel drawer>
 			<core-toolbar id="navheader" class="tall">
 				<img class="middle profile" src="{{user.profile}}" hidden?="{{!user.profile}}">
@@ -171,6 +171,20 @@
 	</div>
 </paper-dialog>
 <script src="app.js"></script>
+<script>
+window.onresize = function(event) {
+	var hidebarinF = true;
+
+	if (hidebarinF == true) {
+		document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
+			((screen.availHeight || screen.height-30) <= window.innerHeight);
+	}
+
+	if (parseInt(document.getElementById('navmenu').selected) == 0) {
+		document.getElementById('gytube').scrollIntoView(false);
+	}
+}
+</script>
 </body>
 </html>
 
