@@ -9,6 +9,8 @@ A WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hack
 	2. cd JukeTube
 	3. bower install
 	4. // launch your favourite http server in cwd
+	5. Ensure server is on 127.0.0.1:8080 or :80 otherwise 
+google-signin will make baby noises in my developer console.
 
 * Add a video to Now Playing
 	1. Login using google-signin on top right
