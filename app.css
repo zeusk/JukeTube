@@ -40,15 +40,9 @@ body {
 	margin: 16px 0 0 0;
 }
 
-#drawerPanel core-scroll-header-panel::shadow #headerBg {
-	background: url(./img/gmail.png) no-repeat 115% 56px;
-	background-size: 200px;
-	background-color: #e51c23;
-}
-
 #drawerPanel core-scroll-header-panel::shadow #condensedHeaderBg {
 	background-color: #e51c23;
-	opacity: 1 !important; /* Prevents the background color from dissolving. */
+	opacity: 1 !important;
 }
 
 paper-item::shadow core-icon {
@@ -206,7 +200,13 @@ core-icon {
 .video-description{ color: #727785; font-size: 12px; line-height: 1.5;}
 .video:hover{ background: #22242a; color: white;}
 
-#Tab6, #Tab7 {
+#Tab5 {
 	margin: 0px 0px 0px 24px;
+}
+
+.capsule {
+	position: fixed;
+	left: 50%;
+	transform: translate(-50%, 0%);
 }
 

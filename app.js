@@ -1,36 +1,49 @@
+
 var template = document.querySelector('#t');
+
 var videoSnippets = [];
 var videoPlayList = [];
 
-template.onSigninFailure = function(e, detail, sender) {
-	this.isAuthenticated = false;
-};
+var MenuIdxHome        = 0;
+var MenuIdxNowPlaying  = 1;
+var MenuIdxWhatToWatch = 2;
+var MenuIdxHistory     = 3;
+var MenuIdxWatchLater  = 4;
+var MenuIdxSettings    = 5;
+var MenuIdxNumberOf    = 6;
 
-template.onSignedOut = function(e, detail, sender) {
-	this.isAuthenticated = false;
+var SettingHideSideBarInFS = true;
+var SettingAutoPlayNowPlay = true;
 
-	// Clear user info
-	template.user = {
-		name: null,
-		email: null,
-		profile: null
-	};
+template.isAuthenticated = false;
 
-	// Clear user lists
-	$('#video-container2').html('');
-	$('#video-container4').html('');
-	$('#video-container5').html('');
-}
-
-template.onTubeReady = function(e, detail, sender) {
-	document.querySelector('#gytube').scrollIntoView(false);
-}
-
-template.onTubeError = function(e, detail, sender) {
-	var prompt = document.querySelector('#errorpd');
-	if (prompt.opened != true) {
-		prompt.toggle();
+window.onresize = function (event) {
+	if (SettingHideSideBarInFS == true) {
+		document.getElementById("drawerPanel").forceNarrow = ((screen.availHeight || screen.height-30) <= window.innerHeight);
 	}
+	if (parseInt(document.getElementById('navmenu').selected) == 0) {
+		document.getElementById('gytube').scrollIntoView(false);
+	}
+}
+
+function RemoveItem(e) {
+	var id = e.id.substr(4);
+
+	for (var i = videoPlayList.length - 1; i >= 0; i--) {
+		if (videoPlayList[i] === id) {
+			videoPlayList.splice(i, 1);
+			break;
+		}
+	}
+
+	document.getElementById(e.id).remove();
+	document.getElementById(e.id + 'sp').remove();
+	document.getElementById('toastItemRemove').show();
+}
+
+function InsertItem(e) {
+	videoPlayList.push(e.id);
+	document.getElementById('toastItemInsert').show();
 }
 
 function handleTubeState() {
@@ -40,166 +53,6 @@ function handleTubeState() {
 		videoPlayList.shift();
 		if (videoPlayList[0])
 			yutube.videoid  = videoPlayList[0];
-	}
-}
-
-template.onTubeState = function(e, detail, sender) {
-	handleTubeState();
-}
-
-template.onMenuActivate = function(e, datail, sender) {
-	var sel = parseInt(document.querySelector('#navmenu').selected);
-
-	// Get new recommendations
-	if (sel == 2) {
-		var requestFeeds = gapi.client.youtube.activities.list({
-			home: true,
-			part: 'contentDetails'
-		});
-		requestFeeds.execute(function(resp) {
-			populateTab(2, resp.result.items);
-		});
-	}
-}
-
-function queueItem(e) {
-	videoPlayList.push(e.id);
-}
-
-template.onMenuSelect = function(e, detail, sender) {
-	var idx = 0;
-	var sel = parseInt(document.querySelector('#navmenu').selected);
-
-	// Hide all but current tabs
-	do {
-		if (idx != sel) {
-			document.querySelector('#Tab' + idx).style.display = 'none';
-		}
-	} while(++idx < 8);
-
-	document.querySelector('#Tab' + sel).style.display = 'block';
-
-	if ((sel == 5 || sel == 4 || sel == 2) && !this.isAuthenticated) {
-		// These tabs require google account authentication
-		var prompt = document.querySelector('#loginpd');
-		if (prompt.opened != true) {
-			prompt.toggle();
-		}
-	} else {
-		// Close drawer if in narrow mode
-		var drw = document.querySelector('#drawerPanel');
-		if (drw.narrow) {
-			drw.closeDrawer();
-		}
-
-		// If on home, make sure video has prime estate on screen
-		if (sel == 0) {
-			var yutube = document.querySelector('#gytube');
-
-			yutube.scrollIntoView(false);
-			if (videoPlayList[0]) {
-				if (yutube.videoid != videoPlayList[0]) {
-					yutube.videoid  = videoPlayList[0];
-				}
-			}
-		} else if (sel == 3) {
-			populateTab(3);
-		}
-	}
-}
-
-function populateTabEx(tid, videoId) {
-	var requestVideo = gapi.client.youtube.videos.list({
-		id: videoId,
-		part: 'snippet'
-	});
-
-	requestVideo.execute(function(resp) {
-		if (!resp.result.items[0]) {
-			return;
-		}
-		if (!!!document.getElementById(videoId)) {
-			$('#video-list'+tid).append(
-				'<div id="' + videoId + '" onclick="queueItem(this)" class="video" ' +
-					'title="' + resp.result.items[0].snippet.title + '">' +
-					'<img class="video-image" src="' +
-						resp.result.items[0].snippet.thumbnails.medium.url +
-					'" height=156px width=auto></img>' +
-					'<p class="video-title">' +
-						resp.result.items[0].snippet.title +
-					'</p>' +
-					'<p class="video-author">' +
-						resp.result.items[0].snippet.channelTitle +
-					'</p>' +
-					'<p class="video-description">' +
-						resp.result.items[0].snippet.description.trunc(448, true) +
-					'</p>' +
-				'</div><p class="video-list-spacer">&nbsp;</p>'
-			);
-
-			videoSnippets[videoId] = resp.result.items[0];
-		}
-	});
-}
-
-function populateTab(tid, playlistId, pageToken) {
-	$('#video-container'+tid).html('<div id="video-list' + tid + '" class="video-list"></div>');
-
-	// Recommendation response contains array of videoIds instead of a playlistId
-	if (tid == 2) {
-		$.each(playlistId, function(index, item) {
-			var videoId;
-
-			if (item.contentDetails.upload) {
-				videoId = item.contentDetails.upload.videoId;
-			} else if (item.contentDetails.like) {
-				videoId = item.contentDetails.like.resourceId.videoId;
-			} else if (item.contentDetails.recommendation) {
-				videoId = item.contentDetails.recommendation.resourceId.videoId;
-			}
-
-			populateTabEx(2, videoId);
-		});
-	} else if (tid == 3) {
-		$.each(videoPlayList, function(index, item) {
-			obj = videoSnippets[item];
-
-			$('#video-list3').append(
-				'<div id="' + item + '" onclick="queueItem(this)" class="video" ' +
-					'title="' + obj.snippet.title + '">' +
-					'<img class="video-image" src="' +
-						obj.snippet.thumbnails.medium.url +
-					'" height=156px width=auto></img>' +
-					'<p class="video-title">' +
-						obj.snippet.title +
-					'</p>' +
-					'<p class="video-author">' +
-						obj.snippet.channelTitle +
-					'</p>' +
-					'<p class="video-description">' +
-						obj.snippet.description.trunc(448, true) +
-					'</p>' +
-				'</div><p class="video-list-spacer">&nbsp;</p>'
-			);
-		});
-	} else {
-		var requestOptions = {
-			playlistId: playlistId,
-			part: 'snippet',
-			maxResults: 10
-		};
-
-		if (pageToken) {
-			requestOptions.pageToken = pageToken;
-		}
-
-		var request = gapi.client.youtube.playlistItems.list(requestOptions);
-		request.execute(function(response) {
-			var playlistItems = response.result.items;
-			$.each(playlistItems, function(index, item) {
-				populateTabEx(tid, item.snippet.resourceId.videoId);
-			});
-		});
 	}
 }
 
@@ -231,8 +84,8 @@ template.onSigninSuccess = function(e, detail, sender) {
 			part: 'contentDetails'
 		});
 		requestLists.execute(function(resp) {
-			populateTab(5, resp.result.items[0].contentDetails.relatedPlaylists.watchLater);
-			populateTab(4, resp.result.items[0].contentDetails.relatedPlaylists.watchHistory);
+			populateTab(MenuIdxWatchLater, resp.result.items[0].contentDetails.relatedPlaylists.watchLater);
+			populateTab(MenuIdxHistory, resp.result.items[0].contentDetails.relatedPlaylists.watchHistory);
 		});
 
 		var requestFeeds = gapi.client.youtube.activities.list({
@@ -240,11 +93,183 @@ template.onSigninSuccess = function(e, detail, sender) {
 			part: 'contentDetails'
 		});
 		requestFeeds.execute(function(resp) {
-			populateTab(2, resp.result.items);
+			populateTab(MenuIdxWhatToWatch, resp.result.items);
 		});
 	});
 
 	this.isAuthenticated = true;
 };
-template.isAuthenticated = false;
+
+template.onSigninFailure = function(e, detail, sender) {
+	this.isAuthenticated = false;
+};
+
+template.onSignedOut = function(e, detail, sender) {
+	this.isAuthenticated = false;
+
+	template.user = {
+		name: null,
+		email: null,
+		profile: null
+	};
+
+	$('#video-container' + MenuIdxWhatToWatch).html('');
+	$('#video-container' + MenuIdxHistory).html('');
+	$('#video-container' + MenuIdxWatchLater).html('');
+}
+
+template.onTubeReady = function(e, detail, sender) {
+	document.querySelector('#gytube').scrollIntoView(false);
+}
+
+template.onTubeError = function(e, detail, sender) {
+	var prompt = document.querySelector('#errorpd');
+	if (prompt.opened != true) {
+		prompt.toggle();
+	}
+}
+
+template.onTubeState = function(e, detail, sender) {
+	handleTubeState();
+}
+
+template.onMenuSelect = function(e, detail, sender) {
+	var idx = 0;
+	var sel = parseInt(document.querySelector('#navmenu').selected);
+
+	do {
+		if (idx != sel) {
+			document.querySelector('#Tab' + idx).style.display = 'none';
+		} else {
+			document.querySelector('#Tab' + sel).style.display = 'block';
+		}
+	} while(++idx < MenuIdxNumberOf);
+
+	if ((sel == MenuIdxWatchLater || sel == MenuIdxHistory || sel == MenuIdxWhatToWatch) && !this.isAuthenticated) {
+		var prompt = document.querySelector('#loginpd');
+		if (prompt.opened != true) {
+			prompt.toggle();
+		}
+	} else {
+		var drw = document.querySelector('#drawerPanel');
+		if (drw.narrow) {
+			drw.closeDrawer();
+		}
+
+		if (sel == MenuIdxHome) {
+			var yutube = document.querySelector('#gytube');
+
+			yutube.scrollIntoView(false);
+			if (videoPlayList[0]) {
+				if (yutube.videoid != videoPlayList[0]) {
+					yutube.videoid  = videoPlayList[0];
+				}
+			}
+		} else if (sel == MenuIdxNowPlaying) {
+			populateTab(MenuIdxNowPlaying);
+		} else if (sel == MenuIdxWhatToWatch) {
+			var requestFeeds = gapi.client.youtube.activities.list({
+				home: true,
+				part: 'contentDetails'
+			});
+			requestFeeds.execute(function(resp) {
+				populateTab(MenuIdxWhatToWatch, resp.result.items);
+			});
+		}
+	}
+}
+
+function populateTabEx(tid, videoId) {
+	var requestVideo = gapi.client.youtube.videos.list({
+		id: videoId,
+		part: 'snippet'
+	});
+
+	requestVideo.execute(function(resp) {
+		if (!resp.result.items[0]) {
+			return;
+		}
+		if (!!!document.getElementById(videoId)) {
+			$('#video-list'+tid).append(
+				'<div id="' + videoId + '" onclick="InsertItem(this)" class="video" ' +
+					'title="' + resp.result.items[0].snippet.title + '">' +
+					'<img class="video-image" src="' +
+						resp.result.items[0].snippet.thumbnails.medium.url +
+					'" height=156px width=auto></img>' +
+					'<p class="video-title">' +
+						resp.result.items[0].snippet.title +
+					'</p>' +
+					'<p class="video-author">' +
+						resp.result.items[0].snippet.channelTitle +
+					'</p>' +
+					'<p class="video-description">' +
+						resp.result.items[0].snippet.description.trunc(448, true) +
+					'</p>' +
+				'</div><p class="video-list-spacer">&nbsp;</p>'
+			);
+
+			videoSnippets[videoId] = resp.result.items[0];
+		}
+	});
+}
+
+function populateTab(tid, playlistId, pageToken) {
+	$('#video-container'+tid).html('<div id="video-list' + tid + '" class="video-list"></div>');
+
+	if (tid == MenuIdxWhatToWatch) {
+		$.each(playlistId, function(index, item) {
+			var videoId;
+
+			if (item.contentDetails.upload) {
+				videoId = item.contentDetails.upload.videoId;
+			} else if (item.contentDetails.like) {
+				videoId = item.contentDetails.like.resourceId.videoId;
+			} else if (item.contentDetails.recommendation) {
+				videoId = item.contentDetails.recommendation.resourceId.videoId;
+			}
+
+			populateTabEx(MenuIdxWhatToWatch, videoId);
+		});
+	} else if (tid == MenuIdxNowPlaying) {
+		$.each(videoPlayList, function(index, item) {
+			obj = videoSnippets[item];
+			console.log('populateTab: ' + item);
+			$('#video-list' + MenuIdxNowPlaying).append(
+				'<div id="nwpl' + item + '" onclick="RemoveItem(this)" class="video" ' +
+					'title="' + obj.snippet.title + '">' +
+					'<img class="video-image" src="' +
+						obj.snippet.thumbnails.medium.url +
+					'" height=156px width=auto></img>' +
+					'<p class="video-title">' +
+						obj.snippet.title +
+					'</p>' +
+					'<p class="video-author">' +
+						obj.snippet.channelTitle +
+					'</p>' +
+					'<p class="video-description">' +
+						obj.snippet.description.trunc(448, true) +
+					'</p>' +
+				'</div><p id="nwpl' + item + 'sp" class="video-list-spacer">&nbsp;</p>'
+			);
+		});
+	} else {
+		var requestOptions = {
+			playlistId: playlistId,
+			part: 'snippet',
+			maxResults: 10
+		};
+
+		if (pageToken) {
+			requestOptions.pageToken = pageToken;
+		}
+
+		var request = gapi.client.youtube.playlistItems.list(requestOptions);
+		request.execute(function(response) {
+			var playlistItems = response.result.items;
+			$.each(playlistItems, function(index, item) {
+				populateTabEx(tid, item.snippet.resourceId.videoId);
+			});
+		});
+	}
+}
 

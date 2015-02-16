@@ -19,15 +19,9 @@
 	<link rel="import" href="./bower_components/core-header-panel/core-header-panel.html">
 	<link rel="import" href="./bower_components/core-scroll-header-panel/core-scroll-header-panel.html">
 	<link rel="import" href="./bower_components/font-roboto/roboto.html">
-	<link rel="import" href="./bower_components/core-dropdown/core-dropdown.html">
-	<link rel="import" href="./bower_components/core-dropdown-menu/core-dropdown-menu.html">
-	<link rel="import" href="./bower_components/paper-fab/paper-fab.html">
 	<link rel="import" href="./bower_components/paper-item/paper-item.html">
 	<link rel="import" href="./bower_components/paper-menu-button/paper-menu-button.html">
-	<link rel="import" href="./bower_components/paper-dropdown/paper-dropdown.html">
-	<link rel="import" href="./bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 	<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
-	<link rel="import" href="./bower_components/paper-spinner/paper-spinner.html">
 	<link rel="import" href="./bower_components/paper-toast/paper-toast.html">
 	<link rel="import" href="./bower_components/paper-dialog/paper-dialog.html">
 	<link rel="import" href="./bower_components/google-signin/google-signin.html">
@@ -35,7 +29,7 @@
 	<link rel="import" href="./bower_components/core-style/core-style.html">
 	<link rel="stylesheet" type="text/css" href="./app.css">
 <script>
-// Modify javascript's trunc function to truncate only at word boundary
+// truncate only at word boundary
 String.prototype.trunc = function(n, useWordBoundary) {
 	var toLong = this.length>n, s_ = toLong ? this.substr(0,n-1) : this;
 	s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
@@ -58,19 +52,10 @@ String.prototype.trunc = function(n, useWordBoundary) {
 				id="navmenu"
 				selected="0"
 				excludedLocalNames="div"
-				on-core-activate="{{onMenuActivate}}"
 				on-core-select="{{onMenuSelect}}">
 				<paper-item label="Home">
 					<core-icon icon="home"></core-icon>
 					Home
-				</paper-item>
-				<paper-item label="Search">
-					<core-icon icon="search"></core-icon>
-					Search
-				</paper-item>
-				<paper-item label="What to Watch">
-					<core-icon icon="menu"></core-icon>
-					What to Watch
 				</paper-item>
 				<div class="separator">
 					PLAYLISTS
@@ -78,6 +63,10 @@ String.prototype.trunc = function(n, useWordBoundary) {
 				<paper-item label="Now Playing">
 					<core-icon icon="av:play-arrow"></core-icon>
 					Now Playing
+				</paper-item>
+				<paper-item label="What to Watch">
+					<core-icon icon="menu"></core-icon>
+					What to Watch
 				</paper-item>
 				<paper-item label="History">
 					<core-icon icon="history"></core-icon>
@@ -94,10 +83,6 @@ String.prototype.trunc = function(n, useWordBoundary) {
 					<core-icon icon="settings"></core-icon>
 					Settings
 				</paper-item>
-				<paper-item label="About">
-					<core-icon icon="info"></core-icon>
-					About
-				</paper-item>
 			</core-menu>
 		</core-header-panel>
 		<core-scroll-header-panel main condenses keepCondensedHeader id="scrollheader">
@@ -110,6 +95,11 @@ String.prototype.trunc = function(n, useWordBoundary) {
 				<div class="bottom indent title">
 					JukeTube
 				</div>
+				<paper-icon-button
+					icon="search"
+					class="fade-on-drawer-open"
+					on-tap="{{toggleSearch}}">
+				</paper-icon-button>
 				<google-signin
 					theme="light"
 					labelSignin="Login"
@@ -138,6 +128,7 @@ String.prototype.trunc = function(n, useWordBoundary) {
 				</google-youtube>
 			</div>
 			<div id = "Tab1" style="display:none;">
+				<div id="video-container1"></div>
 			</div>
 			<div id = "Tab2" style="display:none;">
 				<div id="video-container2"></div>
@@ -149,52 +140,41 @@ String.prototype.trunc = function(n, useWordBoundary) {
 				<div id="video-container4"></div>
 			</div>
 			<div id = "Tab5" style="display:none;">
-				<div id="video-container5"></div>
-			</div>
-			<div id = "Tab6" style="display:none;">
 				<br />
 				<div>
-					<p>This area is left blank intentionally at the moment.</p>
-				</div>
-			</div>
-			<div id = "Tab7" style="display:none;">
-				<br />
-				<div>
-					<p>JukeTube is a WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hackathon.</p>
+					<p>This area is left blank intentionally at the moment :(</p>
 				</div>
 			</div>
 		</core-scroll-header-panel>
 	</core-drawer-panel>
-<paper-dialog id="loginpd" transition="core-transition-bottom">
-	<h1>Got Google?</h1>
-	<div class="separator"></div>
-	<div id="loginpdmsg">
-		Please login to use this feature.
-	</div>
-</paper-dialog>
-<paper-dialog id="errorpd" transition="core-transition-bottom">
-	<h1>Error</h1>
-	<div class="separator"></div>
-	<div id="errorpdmsg">
-		An unexpected error has occured, Please refresh the page to continue.
-	</div>
-</paper-dialog>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="app.js"></script>
-<script>
-var hidebarinF = true;
-
-window.onresize = function (event) {
-	if (hidebarinF == true) {
-		document.getElementById("drawerPanel").forceNarrow = hidebarinF &&
-			((screen.availHeight || screen.height-30) <= window.innerHeight);
-	}
-
-	if (parseInt(document.getElementById('navmenu').selected) == 0) {
-		document.getElementById('gytube').scrollIntoView(false);
-	}
-}
-</script>
+	<paper-toast
+		id="toastItemInsert"
+		class="capsule"
+		text="Added to Now Playing"
+		style="right: 48%; left: auto;">
+	</paper-toast>
+	<paper-toast
+		id="toastItemRemove"
+		class="capsule"
+		text="Removed from Now Playing"
+		style="">
+	</paper-toast>
+	<paper-dialog id="loginpd" transition="core-transition-bottom">
+		<h1>Got Google?</h1>
+		<div class="separator"></div>
+		<div id="loginpdmsg">
+			Please login to use this feature.
+		</div>
+	</paper-dialog>
+	<paper-dialog id="errorpd" transition="core-transition-bottom">
+		<h1>Error</h1>
+		<div class="separator"></div>
+		<div id="errorpdmsg">
+			An unexpected error has occured, Please refresh the page to continue.
+		</div>
+	</paper-dialog>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="app.js"></script>
 </template>
 </body>
 </html>
