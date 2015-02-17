@@ -4,6 +4,8 @@ A WIP Jukebox for Youtube, built using polymer during GDG Manipal's polymer hack
 
 ## How-To
 
+* Try [live demo here.](http://zeusk.github.io/JukeTube)
+
 * Install
 	1. git clone https://github.com/zeusk/JukeTube.git
 	2. cd JukeTube
